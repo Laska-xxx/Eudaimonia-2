@@ -3,7 +3,7 @@ using Features.Player;
 using Features.UI;
 using UnityEngine;
 using Zenject;
-using Features.Player.Interact.Smoking;
+using Features.Player.Interact.Blowing;
 using Features.Player.Data;
 using Features.Player.Move;
 using Features.Player.Stress;
@@ -31,9 +31,9 @@ namespace Features.ZenjectInstallers
         {
             SignalBusInstaller.Install(Container);
 
-            Container.DeclareSignal<CigarettesCountChangedSignal>();
+            Container.DeclareSignal<SoapBubblesCountChangedSignal>();
             Container.DeclareSignal<StressChangedSignal>();
-            Container.DeclareSignal<CoughFromSmokingSignal>();
+            Container.DeclareSignal<CoughFromBlowingSignal>();
             Container.DeclareSignal<StaminaChangedSignal>();
         }
 

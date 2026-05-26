@@ -1,6 +1,6 @@
 using Features.Player;
 using Features.Player.Move;
-using Features.Player.Interact.Smoking;
+using Features.Player.Interact.Blowing;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,7 +22,7 @@ namespace Features.UI
             _signalBus = signalBus;
 
             _signalBus.Subscribe<StressChangedSignal>(UpdateStressSlider);
-            _signalBus.Subscribe<CigarettesCountChangedSignal>(UpdateCiggaretText);
+            _signalBus.Subscribe<SoapBubblesCountChangedSignal>(UpdateCiggaretText);
             _signalBus.Subscribe<StaminaChangedSignal>(UpdateStaminaSlider);
         }
 
@@ -31,7 +31,7 @@ namespace Features.UI
             if (_signalBus != null)
             {
                 _signalBus.TryUnsubscribe<StressChangedSignal>(UpdateStressSlider);
-                _signalBus.TryUnsubscribe<CigarettesCountChangedSignal>(UpdateCiggaretText);
+                _signalBus.TryUnsubscribe<SoapBubblesCountChangedSignal>(UpdateCiggaretText);
                 _signalBus.TryUnsubscribe<StaminaChangedSignal>(UpdateStaminaSlider);
             }
         }
@@ -46,7 +46,7 @@ namespace Features.UI
             staminaSlider.value = signal.NormalizedStamina;
         }
 
-        private void UpdateCiggaretText(CigarettesCountChangedSignal signal)
+        private void UpdateCiggaretText(SoapBubblesCountChangedSignal signal)
         {
             ciggaretCountText.text = signal.NewCount.ToString();
         }

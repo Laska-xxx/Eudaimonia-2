@@ -1,7 +1,6 @@
 using DG.Tweening;
-using Features.Player.Interact.Smoking;
+using Features.Player.Interact.Blowing;
 using Features.UI;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -39,12 +38,12 @@ namespace Features.Effects
         {
             _signalBus = signalBus;
             _textAnimator = textAnimator;
-            _signalBus.Subscribe<CoughFromSmokingSignal>(PlayCoughEffect);
+            _signalBus.Subscribe<CoughFromBlowingSignal>(PlayCoughEffect);
         }
 
         private void OnDisable()
         {
-            _signalBus?.TryUnsubscribe<CoughFromSmokingSignal>(PlayCoughEffect);
+            _signalBus?.TryUnsubscribe<CoughFromBlowingSignal>(PlayCoughEffect);
             _coughTween?.Kill();
             _coughSequence?.Kill();
         }
@@ -62,7 +61,7 @@ namespace Features.Effects
             }
         }
 
-        public void PlayCoughEffect(CoughFromSmokingSignal signal)
+        public void PlayCoughEffect(CoughFromBlowingSignal signal)
         {
             _coughTween?.Kill();
             _coughSequence?.Kill();

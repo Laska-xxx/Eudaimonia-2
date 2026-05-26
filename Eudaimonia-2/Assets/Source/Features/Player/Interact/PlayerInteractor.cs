@@ -1,6 +1,6 @@
 using UnityEngine;
 using Core;
-using Features.Player.Interact.Smoking;
+using Features.Player.Interact.Blowing;
 using Features.Interactable;
 using Features.UI;
 using Zenject;

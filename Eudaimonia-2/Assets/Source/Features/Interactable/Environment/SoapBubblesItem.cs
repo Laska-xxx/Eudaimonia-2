@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Features.Interactable.Environment
 {
-    public class CigaretteItem : MonoBehaviour, IInteractable
+    public class SoapBubblesItem : MonoBehaviour, IInteractable
     {
         [SerializeField] private string hintText = "Подобрать на [E]";
         public string HintText => hintText;

@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 using Zenject;
 using Features.Player.Stress;
 
-namespace Features.Player.Interact.Smoking
+namespace Features.Player.Interact.Blowing
 {
     public class BlowingController : MonoBehaviour
     {
@@ -128,7 +128,7 @@ namespace Features.Player.Interact.Smoking
 
         private void TriggerCough()
         {
-            _signalBus.Fire(new CoughFromSmokingSignal { stress = stressReduceAmount });
+            _signalBus.Fire(new CoughFromBlowingSignal { stress = stressReduceAmount });
             _stressManager.AddStress(stressReduceAmount);
             EndBlowing();
         }
