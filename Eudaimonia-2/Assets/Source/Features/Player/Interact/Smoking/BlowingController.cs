@@ -6,7 +6,7 @@ using Features.Player.Stress;
 
 namespace Features.Player.Interact.Smoking
 {
-    public class SmokingController : MonoBehaviour
+    public class BlowingController : MonoBehaviour
     {
         [SerializeField] private GameObject cigaretteObj;
         [SerializeField] private Animator cigaretteAnimator;
@@ -35,18 +35,18 @@ namespace Features.Player.Interact.Smoking
             _stressManager = stressManager;
             _signalBus = signalBus;
 
-            _gameInput.Player.EquipCigarette.performed += ToggleCigarette;
-            _gameInput.Player.Smoke.started += StartInhale;
-            _gameInput.Player.Smoke.canceled += StopInhale;
+            _gameInput.Player.EquipCigarette.performed += ToggleSoapBubbles;
+            _gameInput.Player.Smoke.started += StartBlow;
+            _gameInput.Player.Smoke.canceled += StopBlow;
         }
 
         private void OnDisable()
         {
             if (_gameInput != null)
             {
-                _gameInput.Player.EquipCigarette.performed -= ToggleCigarette;
-                _gameInput.Player.Smoke.started -= StartInhale;
-                _gameInput.Player.Smoke.canceled -= StopInhale;
+                _gameInput.Player.EquipCigarette.performed -= ToggleSoapBubbles;
+                _gameInput.Player.Smoke.started -= StartBlow;
+                _gameInput.Player.Smoke.canceled -= StopBlow;
             }
         }
 
@@ -75,7 +75,7 @@ namespace Features.Player.Interact.Smoking
             }
         }
 
-        private void ToggleCigarette(InputAction.CallbackContext ctx)
+        private void ToggleSoapBubbles(InputAction.CallbackContext ctx)
         {
             print(_currentState);
             if (_currentState == SmokeState.Starting || _currentState == SmokeState.Smoking) return;
@@ -97,7 +97,7 @@ namespace Features.Player.Interact.Smoking
             }
         }
 
-        private void StartInhale(InputAction.CallbackContext ctx)
+        private void StartBlow(InputAction.CallbackContext ctx)
         {
             if (_currentState != SmokeState.Idle) return;
 
@@ -106,7 +106,7 @@ namespace Features.Player.Interact.Smoking
             cigaretteAnimator.SetTrigger("Start Smok");
         }
 
-        private void StopInhale(InputAction.CallbackContext ctx)
+        private void StopBlow(InputAction.CallbackContext ctx)
         {
             if (_currentState == SmokeState.Starting)
             {
@@ -116,24 +116,24 @@ namespace Features.Player.Interact.Smoking
             }
             else if (_currentState == SmokeState.Smoking)
             {
-                ExhaleSmoke();
+                ExhaleBlow();
             }
         }
 
-        private void ExhaleSmoke()
+        private void ExhaleBlow()
         {
             _stressManager.ReduceStress(stressReliefAmount);
-            EndSmoking();
+            EndBlowing();
         }
 
         private void TriggerCough()
         {
             _signalBus.Fire(new CoughFromSmokingSignal { stress = stressReduceAmount });
             _stressManager.AddStress(stressReduceAmount);
-            EndSmoking();
+            EndBlowing();
         }
 
-        private void EndSmoking()
+        private void EndBlowing()
         {
             _inventory.GetCigarette();
             exhaleVfx.Play();
