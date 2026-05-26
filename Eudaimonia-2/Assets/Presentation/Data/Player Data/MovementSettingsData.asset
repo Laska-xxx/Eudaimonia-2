@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c12975a3387fd44f9c0532a783d2318, type: 3}
+  m_Name: MovementSettingsData
+  m_EditorClassIdentifier: Assembly-CSharp::MovementSettingsSO
+  <standingHeight>k__BackingField: 2
+  <squatHeight>k__BackingField: 1
+  <eysStandingHeight>k__BackingField: 0.9
+  <eysSquatHeight>k__BackingField: 0.4
+  <maxStamina>k__BackingField: 15
+  <walkSpeed>k__BackingField: 5
+  <sprintSpeed>k__BackingField: 7
+  <jumpForce>k__BackingField: 3
+  <squatSpeed>k__BackingField: 3
+  <squatTransitionSpeed>k__BackingField: 6
+  <climbSpeed>k__BackingField: 3
+  gravity: -17
+  <pushForce>k__BackingField: 0.2
