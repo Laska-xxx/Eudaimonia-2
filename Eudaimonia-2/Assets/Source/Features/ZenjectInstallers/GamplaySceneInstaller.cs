@@ -6,6 +6,7 @@ using Zenject;
 using Features.Player.Interact.Smoking;
 using Features.Player.Data;
 using Features.Player.Move;
+using Features.Player.Stress;
 
 namespace Features.ZenjectInstallers
 {

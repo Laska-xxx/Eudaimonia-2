@@ -2,7 +2,7 @@ using Features.Player.Data;
 using UnityEngine;
 using Zenject;
 
-namespace Features.Player
+namespace Features.Player.Stress
 {
     public class StressManager : ITickable
     {

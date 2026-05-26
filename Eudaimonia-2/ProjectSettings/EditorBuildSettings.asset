@@ -9,10 +9,10 @@ EditorBuildSettings:
     path: Assets/Presentation/Scenes/MainMenu.unity
     guid: 00fa92404a79eb949a4b2afdc8483fc1
   - enabled: 1
+    path: Assets/Presentation/Scenes/DevScene.unity
+    guid: 7a230c7d75fa0a343867843941698347
+  - enabled: 1
     path: Assets/Presentation/Scenes/PresentationScene.unity
     guid: 355b18455c442834cb6daf0794042647
-  - enabled: 1
-    path: Assets/Presentation/Scenes/DevScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

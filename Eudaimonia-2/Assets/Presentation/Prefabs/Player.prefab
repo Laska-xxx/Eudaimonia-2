@@ -517,11 +517,11 @@ MonoBehaviour:
   viewLevel: {fileID: 4540132030261648024}
   motionPivot: {fileID: 8656009336243306129}
   walkAmplitude: 0.3
-  walkSpeed: 1
-  sprintAmplitude: 0.45
-  sprintSpeed: 0.5
+  walkSpeed: 0.3
+  sprintAmplitude: 0.4
+  sprintSpeed: 0.2
   squatAmplitude: 0.25
-  squatSpeed: 1.2
+  squatSpeed: 0.4
 --- !u!1 &4696652703625167936
 GameObject:
   m_ObjectHideFlags: 0

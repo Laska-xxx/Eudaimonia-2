@@ -127,11 +127,15 @@ namespace Features.Player.Move
             playerAnimator.UpdateHeadbob(newState, _isMoving);
 
             _heightTween?.Kill();
+
             float targetHeight = isSquatting ? _settings.squatHeight : _settings.standingHeight;
+
             float duration = 3f / _settings.squatTransitionSpeed;
 
             _heightTween = DOTween.To(() => _characterController.height, x => _characterController.height = x, targetHeight, duration)
+
                 .SetEase(Ease.OutQuad)
+
                 .SetLink(gameObject);
         }
 

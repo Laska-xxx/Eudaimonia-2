@@ -56,9 +56,16 @@ namespace Features.Player.Move
             _canToSprint = false;
         }
 
-        public void TryStandUp() => WantsToStandUp = true;
+        public void TryStandUp() 
+        {
+            WantsToStandUp = true;
+        }
 
-        public void ConfirmStandUp() => SetState(MovementStateEnum.Walking);
+        public void ConfirmStandUp()
+        {
+            WantsToStandUp = false;
+            SetState(MovementStateEnum.Walking);
+        }
 
         public void SetSprint(bool isSprinting)
         {

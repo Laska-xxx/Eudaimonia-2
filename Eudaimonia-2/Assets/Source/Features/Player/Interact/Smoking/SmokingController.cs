@@ -2,18 +2,17 @@ using Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Zenject;
+using Features.Player.Stress;
 
 namespace Features.Player.Interact.Smoking
 {
     public class SmokingController : MonoBehaviour
     {
-        [Header("References")]
         [SerializeField] private GameObject cigaretteObj;
         [SerializeField] private Animator cigaretteAnimator;
-        [SerializeField] private ParticleSystem cigaretteLitVfx; // Опционально: дымок от самой тлеющей сигареты
-        [SerializeField] private ParticleSystem exhaleVfx;       // Выдох дыма изо рта
+        [SerializeField] private ParticleSystem cigaretteLitVfx; 
+        [SerializeField] private ParticleSystem exhaleVfx;   
 
-        [Header("Settings")]
         [SerializeField] private float maxInhaleTime = 5f;
         [SerializeField] private float stressReliefAmount = 15f;
         [SerializeField] private float stressReduceAmount = 10f;
@@ -78,6 +77,7 @@ namespace Features.Player.Interact.Smoking
 
         private void ToggleCigarette(InputAction.CallbackContext ctx)
         {
+            print(_currentState);
             if (_currentState == SmokeState.Starting || _currentState == SmokeState.Smoking) return;
 
             if (_currentState == SmokeState.Idle)
@@ -124,8 +124,6 @@ namespace Features.Player.Interact.Smoking
         {
             _stressManager.ReduceStress(stressReliefAmount);
             EndSmoking();
-
-            Unequip();
         }
 
         private void TriggerCough()
@@ -133,8 +131,6 @@ namespace Features.Player.Interact.Smoking
             _signalBus.Fire(new CoughFromSmokingSignal { stress = stressReduceAmount });
             _stressManager.AddStress(stressReduceAmount);
             EndSmoking();
-
-            Unequip();
         }
 
         private void EndSmoking()
@@ -142,15 +138,19 @@ namespace Features.Player.Interact.Smoking
             _inventory.GetCigarette();
             exhaleVfx.Play();
             cigaretteLitVfx.Stop();
+
+            if (_inventory.TryConsumeCigarette())
+            {
+                _currentState = SmokeState.Idle;
+                cigaretteAnimator.Play("CigaretteIdle");
+                return;
+            }
+
+            Unequip();
         }
 
         private void Unequip()
         {
-            if (_inventory.TryConsumeCigarette())
-            {
-                _currentState = SmokeState.Idle;
-                return;
-            }
             _currentState = SmokeState.Unequipped;
             cigaretteObj.SetActive(false);
         }

@@ -10,16 +10,16 @@ public class PlayerAnimator : MonoBehaviour
     [SerializeField] private Transform motionPivot;
 
     [Header("Walk Animation")]
-    [SerializeField] private float walkAmplitude = 0.3f;
-    [SerializeField] private float walkSpeed = 1f;
+    [SerializeField] private float walkAmplitude = 0.4f;
+    [SerializeField] private float walkSpeed = 0.3f;
 
     [Header("Run Animation")]
-    [SerializeField] private float sprintAmplitude = 0.45f;
-    [SerializeField] private float sprintSpeed = 0.5f;
+    [SerializeField] private float sprintAmplitude = 0.5f;
+    [SerializeField] private float sprintSpeed = 0.1f;
 
     [Header("Run Animation")]
-    [SerializeField] private float squatAmplitude = 0.25f;
-    [SerializeField] private float squatSpeed = 1.2f;
+    [SerializeField] private float squatAmplitude = 0.3f;
+    [SerializeField] private float squatSpeed = 0.4f;
 
     private Tween _squatTween;
     private Tween _bobTween;
@@ -62,22 +62,29 @@ public class PlayerAnimator : MonoBehaviour
         }
 
         float amplitude = walkAmplitude;
-        float speed = walkSpeed;
+        float duration = walkSpeed;
 
         if (state == MovementStateEnum.Sprinting)
         {
             amplitude = sprintAmplitude;
-            speed = sprintSpeed;
+            duration = sprintSpeed;
         }
         else if (state == MovementStateEnum.Squatting)
         {
             amplitude = squatAmplitude;
-            speed = squatSpeed;
+            duration = squatSpeed;
         }
 
-        _bobTween = motionPivot.DOLocalMoveY(_cameraBasePos.y + amplitude, speed)
+        Sequence bobSequence = DOTween.Sequence();
+
+        bobSequence.Append(motionPivot.DOLocalMoveY(_cameraBasePos.y, 0.15f)
+            .SetEase(Ease.InOutSine));
+
+        bobSequence.Append(motionPivot.DOLocalMoveY(_cameraBasePos.y + amplitude, duration)
             .SetEase(Ease.InOutSine)
-            .SetLoops(-1, LoopType.Yoyo)
-            .SetLink(gameObject);
+            .SetLoops(-1, LoopType.Yoyo));
+
+        bobSequence.SetLink(gameObject);
+        _bobTween = bobSequence;
     }
 }
