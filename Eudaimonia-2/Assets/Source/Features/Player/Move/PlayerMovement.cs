@@ -2,10 +2,10 @@ using Features.Player.Data;
 using Features.Player.Move.MoveStates;
 using Core;
 using DG.Tweening;
-using Features.Interactable.Environment;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Zenject;
+using System;
 
 namespace Features.Player.Move
 {
@@ -13,22 +13,25 @@ namespace Features.Player.Move
     public class PlayerMovement : MonoBehaviour
     {
         [SerializeField] private LayerMask obstacleLayer;
-        [SerializeField] private LayerMask ladderLayer;
         [SerializeField] private Transform viewHandler;
-        [SerializeField] private PlayerViewProvider viewProvider;
         [SerializeField] private PlayerAnimator playerAnimator;
+        [SerializeField] private LadderDetector ladderDetector;
 
         public MovementStateEnum CurrentState => _validator.CurrentState;
+        public bool IsMoving { get; private set; }
+
+        public event Action OnJumped;
+        public event Action OnLanded;
+        public event Action<MovementStateEnum> OnStateChanged;
+
         private MovementSettingsSO _settings;
         private CharacterController _characterController;
         private PlayerMovementValidator _validator;
         private GameInput _gameInput;
         private Vector2 _moveInput;
-        private Collider _currentLadder;
         private SignalBus _signalBus;
         private float _lastStamina = -1f;
-        private Tween _heightTween;
-        private bool _isMoving;
+        private bool _wasGrounded;
 
         [Inject]
         private void Init(InputManager inputManager, MovementSettingsSO movementSettings, SignalBus signalBus)
@@ -48,12 +51,12 @@ namespace Features.Player.Move
         {
             _characterController = GetComponent<CharacterController>();
             _validator = new PlayerMovementValidator(_settings);
-            _validator.OnStateChanged += OnMovementStateChanged;
+            _validator.OnStateChanged += HandleStateChanged;
         }
 
         private void OnDisable()
         {
-            _validator.OnStateChanged -= OnMovementStateChanged;
+            _validator.OnStateChanged -= HandleStateChanged;
 
             if (_gameInput != null)
             {
@@ -71,73 +74,39 @@ namespace Features.Player.Move
             HandleSquatState();
             Move();
 
-            if (!(_lastStamina == _validator.CurrentStamina))
-            {
-                _lastStamina = _validator.CurrentStamina;
+            CheckGroundedStatus();
+            CheckStamina();
+        }
 
-                _signalBus.Fire(new StaminaChangedSignal{NormalizedStamina = _validator.CurrentStamina / _settings.maxStamina});
-            }
+        private void HandleStateChanged(MovementStateEnum newState)
+        {
+            OnStateChanged?.Invoke(newState);
         }
 
         private void UpdateStates()
         {
             _moveInput = _gameInput.Player.Move.ReadValue<Vector2>();
 
-            bool isLookingAtLadder = false;
+            _validator.SetNearLadder(ladderDetector.IsNearLadder);
+            _validator.UpdateStatesAndStamina(_moveInput, Time.deltaTime, ladderDetector.CheckLookingAtLadder());
 
-            if (_currentLadder != null)
-            {
-                Vector3 lookXZ = new Vector3(viewProvider.LookDirection.x, 0f, viewProvider.LookDirection.z);
-
-                Vector3 ladderCenter = _currentLadder.bounds.center;
-                Vector3 toLadderXZ = new Vector3(ladderCenter.x - transform.position.x, 0f, ladderCenter.z - transform.position.z);
-
-                if (lookXZ.sqrMagnitude > 0.001f && toLadderXZ.sqrMagnitude > 0.001f)
-                {
-                    float dot = Vector3.Dot(lookXZ.normalized, toLadderXZ.normalized);
-
-                    isLookingAtLadder = dot > 0.2f;
-                }
-                else
-                {
-                    isLookingAtLadder = true;
-                }
-
-                if (!isLookingAtLadder && viewProvider.IsLookingAtLayer(ladderLayer))
-                {
-                    isLookingAtLadder = true;
-                }
-            }
-
-            _validator.UpdateStatesAndStamina(_moveInput, Time.deltaTime, isLookingAtLadder);
-
-            bool currentlyMoving = _moveInput.sqrMagnitude > 0.01f && _characterController.isGrounded;
-            if (currentlyMoving != _isMoving)
-            {
-                _isMoving = currentlyMoving;
-                playerAnimator?.UpdateHeadbob(_validator.CurrentState, _isMoving);
-            }
+            IsMoving = _moveInput.sqrMagnitude > 0.01f && _characterController.isGrounded;
         }
 
-        private void OnMovementStateChanged(MovementStateEnum newState)
+        private void CheckGroundedStatus()
         {
-            bool isSquatting = newState == MovementStateEnum.Squatting;
+            bool isGroundedNow = _characterController.isGrounded;
+            if (isGroundedNow && !_wasGrounded) OnLanded?.Invoke();
+            _wasGrounded = isGroundedNow;
+        }
 
-            playerAnimator.AnimateSquat(isSquatting);
-
-            playerAnimator.UpdateHeadbob(newState, _isMoving);
-
-            _heightTween?.Kill();
-
-            float targetHeight = isSquatting ? _settings.squatHeight : _settings.standingHeight;
-
-            float duration = 3f / _settings.squatTransitionSpeed;
-
-            _heightTween = DOTween.To(() => _characterController.height, x => _characterController.height = x, targetHeight, duration)
-
-                .SetEase(Ease.OutQuad)
-
-                .SetLink(gameObject);
+        private void CheckStamina()
+        {
+            if (Mathf.Abs(_lastStamina - _validator.CurrentStamina) > 0.001f)
+            {
+                _lastStamina = _validator.CurrentStamina;
+                _signalBus.Fire(new StaminaChangedSignal { NormalizedStamina = _validator.CurrentStamina / _settings.maxStamina });
+            }
         }
 
         private void Move()
@@ -153,6 +122,7 @@ namespace Features.Player.Move
         {
             if (_characterController.isGrounded) _validator.Jump();
         }
+
         private void OnSquat(InputAction.CallbackContext ctx)
         {
             _validator.TrySquat();
@@ -162,15 +132,16 @@ namespace Features.Player.Move
         {
             _validator.TryStandUp();
         }
+
         private void OnSprint(InputAction.CallbackContext ctx)
         {
             _validator.SetSprint(true);
         }
+
         private void OnSprintCanceled(InputAction.CallbackContext ctx)
         {
             _validator.SetSprint(false);
         }
-
 
         private void HandleSquatState()
         {
@@ -187,40 +158,6 @@ namespace Features.Player.Move
             Vector3 targetHeadCenter = transform.position + Vector3.up * headOffset;
 
             return !Physics.CheckSphere(targetHeadCenter, radius, obstacleLayer, QueryTriggerInteraction.Ignore);
-        }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            if ((ladderLayer.value & (1 << other.gameObject.layer)) != 0)
-            {
-                Debug.Log("ladder");
-                _currentLadder = other;
-                _validator.SetNearLadder(true);
-            }
-        }
-
-        private void OnTriggerExit(Collider other)
-        {
-            if ((ladderLayer.value & (1 << other.gameObject.layer)) != 0)
-            {
-                if (other == _currentLadder)
-                {
-                    _currentLadder = null;
-                    _validator.SetNearLadder(false);
-                }
-            }
-        }
-
-        private void OnControllerColliderHit(ControllerColliderHit hit)
-        {
-            if (hit.collider.TryGetComponent<GrabbableItem>(out GrabbableItem item))
-            {
-                if (hit.moveDirection.y < -0.3f) return;
-
-                Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
-                var body = item.gameObject.GetComponent<Rigidbody>();
-                if (body != null) body.AddForce(pushDir * _settings.pushForce, ForceMode.VelocityChange);
-            }
         }
     }
 }

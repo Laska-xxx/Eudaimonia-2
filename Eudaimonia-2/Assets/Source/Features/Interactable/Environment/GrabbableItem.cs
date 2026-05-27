@@ -17,7 +17,6 @@ namespace Features.Interactable.Environment
 
         public void Interact(PlayerInteractor player)
         {
-            Debug.Log("Grabble");
             player.Grabber.GrabItem(this);
         }
     }

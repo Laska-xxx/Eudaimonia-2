@@ -3,9 +3,11 @@ using DG.Tweening;
 using Features.Player.Move.MoveStates;
 using UnityEngine;
 using Zenject;
+using Features.Player.Move;
 
 public class PlayerAnimator : MonoBehaviour
 {
+    [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private Transform viewLevel;
     [SerializeField] private Transform motionPivot;
 
@@ -25,6 +27,7 @@ public class PlayerAnimator : MonoBehaviour
     private Tween _bobTween;
     private Vector3 _cameraBasePos;
     private MovementSettingsSO _settings;
+    private bool _wasMoving;
 
     [Inject]
     private void Init(MovementSettingsSO movementSettings)
@@ -35,6 +38,33 @@ public class PlayerAnimator : MonoBehaviour
     private void Awake()
     {
         _cameraBasePos = motionPivot.localPosition;
+    }
+
+    private void OnEnable()
+    {
+        playerMovement.OnStateChanged += HandleStateChanged;
+    }
+
+    private void OnDisable()
+    {
+        playerMovement.OnStateChanged -= HandleStateChanged;
+    }
+
+    private void Update()
+    {
+        if (playerMovement != null && _wasMoving != playerMovement.IsMoving)
+        {
+            _wasMoving = playerMovement.IsMoving;
+            UpdateHeadbob(playerMovement.CurrentState, _wasMoving);
+        }
+    }
+
+    private void HandleStateChanged(MovementStateEnum newState)
+    {
+        bool isSquatting = newState == MovementStateEnum.Squatting;
+        AnimateSquat(isSquatting);
+
+        UpdateHeadbob(newState, playerMovement.IsMoving);
     }
 
     public void AnimateSquat(bool isSquatting)
