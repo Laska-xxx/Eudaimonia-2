@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54b238bbad2365d4086a199d7027d68e, type: 3}
+  m_Name: Walk
+  m_EditorClassIdentifier: Assembly-CSharp::AudioDataSO
+  clips:
+  - {fileID: 8300000, guid: 5c1996e649a2e2440a09cac5650a4d0a, type: 3}
+  - {fileID: 8300000, guid: b83014b4958299940a9bf4c0c4db0899, type: 3}
+  - {fileID: 8300000, guid: 06c54d7b1c9545944a00c0050a5509fb, type: 3}
+  - {fileID: 8300000, guid: d216bdd97a0ca8c4aaceae904f541af7, type: 3}
+  volume: 1
+  minPitch: 0.9
+  maxPitch: 1.1

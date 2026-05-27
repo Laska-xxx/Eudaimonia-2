@@ -1,8 +1,9 @@
-using UnityEngine;
 using Core;
-using Features.Player.Interact.Blowing;
 using Features.Interactable;
+using Features.Player.Interact.Blowing;
 using Features.UI;
+using UnityEngine;
+using UnityEngine.InputSystem;
 using Zenject;
 
 namespace Features.Player.Interact
@@ -18,18 +19,18 @@ namespace Features.Player.Interact
 
         private GameInput _gameInput;
         private HintUI _interactionUI;
-        private NoteUIController _noteUIController;
+        private NoteUI _noteUI;
         private IInteractable _currentInteractable;
 
         [Inject]
-        public void Init(InputManager inputManager, HintUI interactionUI, NoteUIController noteUIController, PlayerInventory playerInventory)
+        public void Init(InputManager inputManager, HintUI interactionUI, NoteUI noteUIController, PlayerInventory playerInventory)
         {
             Inventory = playerInventory;
             _gameInput = inputManager.GameInput;
             _interactionUI = interactionUI;
-            _noteUIController = noteUIController;
+            _noteUI = noteUIController;
 
-            _gameInput.Player.Interact.performed += ctx => TryInteract();
+            _gameInput.Player.Interact.performed += TryInteract;
         }
 
         private void Awake()
@@ -40,7 +41,7 @@ namespace Features.Player.Interact
         private void OnDisable()
         {
             if (_gameInput != null)
-                _gameInput.Player.Interact.performed -= ctx => TryInteract();
+                _gameInput.Player.Interact.performed -= TryInteract;
         }
 
         private void Update()
@@ -67,15 +68,17 @@ namespace Features.Player.Interact
             }
         }
 
-        private void TryInteract()
+        private void TryInteract(InputAction.CallbackContext ctx)
         {
+            print("try interact");
            if (Grabber.IsHoldingItem)
             {
                 Grabber.DropItem();
                 return;
             }
 
-            if (_currentInteractable != null && !_noteUIController.IsNoteOpen)
+            print(_currentInteractable);
+            if (_currentInteractable != null && !_noteUI.IsNoteOpen)
             {
                 _currentInteractable.Interact(this);
             }

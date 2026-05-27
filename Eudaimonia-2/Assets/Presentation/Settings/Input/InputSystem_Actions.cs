@@ -354,15 +354,6 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Clouse Note"",
-                    ""type"": ""Button"",
-                    ""id"": ""a2867d71-20d3-4157-97cd-56c7715e7da6"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -376,15 +367,32 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
                     ""action"": ""Esc"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
+                }
+            ]
+        },
+        {
+            ""name"": ""Note"",
+            ""id"": ""1a7044e6-0bfe-4465-a32b-37b2ed82699a"",
+            ""actions"": [
+                {
+                    ""name"": ""CloseNote"",
+                    ""type"": ""Button"",
+                    ""id"": ""08a8796c-a5ab-41f6-8b5f-b664ddf77373"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""52df9465-ac38-45eb-84b1-e0663cd480a9"",
+                    ""id"": ""26c58640-a1bc-40b3-9c82-9a50f0081732"",
                     ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Clouse Note"",
+                    ""action"": ""CloseNote"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -468,13 +476,16 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Esc = m_UI.FindAction("Esc", throwIfNotFound: true);
-        m_UI_ClouseNote = m_UI.FindAction("Clouse Note", throwIfNotFound: true);
+        // Note
+        m_Note = asset.FindActionMap("Note", throwIfNotFound: true);
+        m_Note_CloseNote = m_Note.FindAction("CloseNote", throwIfNotFound: true);
     }
 
     ~@GameInput()
     {
         UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, GameInput.Player.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, GameInput.UI.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Note.enabled, "This will cause a leak and performance issues, GameInput.Note.Disable() has not been called.");
     }
 
     /// <summary>
@@ -735,7 +746,6 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_UI;
     private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
     private readonly InputAction m_UI_Esc;
-    private readonly InputAction m_UI_ClouseNote;
     /// <summary>
     /// Provides access to input actions defined in input action map "UI".
     /// </summary>
@@ -751,10 +761,6 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "UI/Esc".
         /// </summary>
         public InputAction @Esc => m_Wrapper.m_UI_Esc;
-        /// <summary>
-        /// Provides access to the underlying input action "UI/ClouseNote".
-        /// </summary>
-        public InputAction @ClouseNote => m_Wrapper.m_UI_ClouseNote;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -784,9 +790,6 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
             @Esc.started += instance.OnEsc;
             @Esc.performed += instance.OnEsc;
             @Esc.canceled += instance.OnEsc;
-            @ClouseNote.started += instance.OnClouseNote;
-            @ClouseNote.performed += instance.OnClouseNote;
-            @ClouseNote.canceled += instance.OnClouseNote;
         }
 
         /// <summary>
@@ -801,9 +804,6 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
             @Esc.started -= instance.OnEsc;
             @Esc.performed -= instance.OnEsc;
             @Esc.canceled -= instance.OnEsc;
-            @ClouseNote.started -= instance.OnClouseNote;
-            @ClouseNote.performed -= instance.OnClouseNote;
-            @ClouseNote.canceled -= instance.OnClouseNote;
         }
 
         /// <summary>
@@ -837,6 +837,102 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="UIActions" /> instance referencing this action map.
     /// </summary>
     public UIActions @UI => new UIActions(this);
+
+    // Note
+    private readonly InputActionMap m_Note;
+    private List<INoteActions> m_NoteActionsCallbackInterfaces = new List<INoteActions>();
+    private readonly InputAction m_Note_CloseNote;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "Note".
+    /// </summary>
+    public struct NoteActions
+    {
+        private @GameInput m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public NoteActions(@GameInput wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "Note/CloseNote".
+        /// </summary>
+        public InputAction @CloseNote => m_Wrapper.m_Note_CloseNote;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_Note; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="NoteActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(NoteActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="NoteActions" />
+        public void AddCallbacks(INoteActions instance)
+        {
+            if (instance == null || m_Wrapper.m_NoteActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_NoteActionsCallbackInterfaces.Add(instance);
+            @CloseNote.started += instance.OnCloseNote;
+            @CloseNote.performed += instance.OnCloseNote;
+            @CloseNote.canceled += instance.OnCloseNote;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="NoteActions" />
+        private void UnregisterCallbacks(INoteActions instance)
+        {
+            @CloseNote.started -= instance.OnCloseNote;
+            @CloseNote.performed -= instance.OnCloseNote;
+            @CloseNote.canceled -= instance.OnCloseNote;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="NoteActions.UnregisterCallbacks(INoteActions)" />.
+        /// </summary>
+        /// <seealso cref="NoteActions.UnregisterCallbacks(INoteActions)" />
+        public void RemoveCallbacks(INoteActions instance)
+        {
+            if (m_Wrapper.m_NoteActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="NoteActions.AddCallbacks(INoteActions)" />
+        /// <seealso cref="NoteActions.RemoveCallbacks(INoteActions)" />
+        /// <seealso cref="NoteActions.UnregisterCallbacks(INoteActions)" />
+        public void SetCallbacks(INoteActions instance)
+        {
+            foreach (var item in m_Wrapper.m_NoteActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_NoteActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="NoteActions" /> instance referencing this action map.
+    /// </summary>
+    public NoteActions @Note => new NoteActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     /// <summary>
     /// Provides access to the input control scheme.
@@ -987,12 +1083,20 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnEsc(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Note" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="NoteActions.AddCallbacks(INoteActions)" />
+    /// <seealso cref="NoteActions.RemoveCallbacks(INoteActions)" />
+    public interface INoteActions
+    {
         /// <summary>
-        /// Method invoked when associated input action "Clouse Note" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "CloseNote" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnClouseNote(InputAction.CallbackContext context);
+        void OnCloseNote(InputAction.CallbackContext context);
     }
 }

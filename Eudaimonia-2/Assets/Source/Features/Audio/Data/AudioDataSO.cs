@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "AudioData", menuName = "Scriptable Objects/AudioData")]
+[CreateAssetMenu(fileName = "AudioData", menuName = "Audio/AudioData")]
 public class AudioDataSO : ScriptableObject
 {
     public AudioClip[] clips;

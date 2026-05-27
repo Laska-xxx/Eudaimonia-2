@@ -1,4 +1,5 @@
 using Features.Interactable.Environment;
+using System;
 using UnityEngine;
 
 namespace Features.Player
@@ -7,7 +8,10 @@ namespace Features.Player
     {
         [SerializeField] private Transform _holdPoint; 
         [SerializeField] private float _grabForce = 15f;
-        [SerializeField] private float _damping = 10f; 
+        [SerializeField] private float _damping = 10f;
+
+        public event Action<GrabbableItem> OnItemGrabbed;
+        public event Action<GrabbableItem> OnItemDropped;
 
         private GrabbableItem _heldItem;
         public bool IsHoldingItem => _heldItem != null;
@@ -20,11 +24,17 @@ namespace Features.Player
             _heldItem.Rb.angularDamping = _damping;
 
             _heldItem.Rb.AddForce(Vector3.up * 2f, ForceMode.Impulse);
+
+            OnItemGrabbed?.Invoke(_heldItem);
         }
 
         public void DropItem()
         {
             if (_heldItem == null) return;
+
+            OnItemDropped?.Invoke(_heldItem);
+
+            _heldItem.ReleaseItem();
 
             _heldItem.Rb.useGravity = true;
             _heldItem.Rb.linearDamping = 0f;

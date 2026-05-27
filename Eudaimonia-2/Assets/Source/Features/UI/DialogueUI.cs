@@ -22,6 +22,9 @@ namespace Features.UI
         private Action _onDialogueComplete;
         private bool _isDialogueMode;
 
+        public event Action<string> OnTypingStarted;
+        public event Action<string> OnTypingFinished;
+
         public bool IsActive => _dialoguePanel.activeSelf;
 
         [Inject]
@@ -42,6 +45,8 @@ namespace Features.UI
 
             _dialoguePanel.SetActive(true);
             _nameText.text = name;
+
+            OnTypingStarted?.Invoke(name);
             _textAnimator.StartTyping(phrase, _phraseText, OnPhraseTyped);
         }
         //показывает диалог
@@ -63,11 +68,15 @@ namespace Features.UI
             if (_waitBeforeCoroutine != null) StopCoroutine(_waitBeforeCoroutine);
 
             string phrase = _currentDialogue[_currentPhraseIndex];
+
+            OnTypingStarted?.Invoke(_nameText.text);
             _textAnimator.StartTyping(phrase, _phraseText, OnPhraseTyped);
         }
         //после напечатования фразы
         private void OnPhraseTyped()
         {
+            OnTypingFinished?.Invoke(_nameText.text);
+
             if (_isDialogueMode)
             {
                 _waitBeforeCoroutine = StartCoroutine(WaitBefore(AdvanceDialogue));
@@ -116,6 +125,11 @@ namespace Features.UI
         //закрыть диологовое окно
         public void Close()
         {
+            if (_nameText != null && !string.IsNullOrEmpty(_nameText.text))
+            {
+                OnTypingFinished?.Invoke(_nameText.text);
+            }
+
             StopAllCoroutines();
             if (_textAnimator != null) _textAnimator.StopTyping();
             _dialoguePanel.SetActive(false);

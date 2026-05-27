@@ -1,7 +1,6 @@
 using Features.Player.Data;
 using Features.Player.Move.MoveStates;
 using Core;
-using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Zenject;
@@ -90,7 +89,7 @@ namespace Features.Player.Move
             _validator.SetNearLadder(ladderDetector.IsNearLadder);
             _validator.UpdateStatesAndStamina(_moveInput, Time.deltaTime, ladderDetector.CheckLookingAtLadder());
 
-            IsMoving = _moveInput.sqrMagnitude > 0.01f && _characterController.isGrounded;
+            IsMoving = _moveInput.sqrMagnitude > 0.01f && (_characterController.isGrounded || _validator.CurrentState == MovementStateEnum.Climbing);
         }
 
         private void CheckGroundedStatus()
@@ -120,7 +119,11 @@ namespace Features.Player.Move
 
         private void OnJump(InputAction.CallbackContext ctx)
         {
-            if (_characterController.isGrounded) _validator.Jump();
+            if (_characterController.isGrounded)
+            {
+                _validator.Jump();
+                OnJumped?.Invoke();
+            }
         }
 
         private void OnSquat(InputAction.CallbackContext ctx)

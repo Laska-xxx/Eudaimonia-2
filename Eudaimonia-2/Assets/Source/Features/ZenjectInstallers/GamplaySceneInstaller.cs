@@ -15,7 +15,7 @@ namespace Features.ZenjectInstallers
         [SerializeField] private StressSettingsSO stressSettings;
         [SerializeField] private MovementSettingsSO movementSettings;
         [SerializeField] private HintUI hintUI;
-        [SerializeField] private NoteUIController NoteUIController;
+        [SerializeField] private NoteUI NoteUIController;
         [SerializeField] private DialogueUI dialogueUI;
         [SerializeField] private TextAnimator textAnimator;
         [SerializeField] private TutorialUI tutorialUI;
@@ -36,6 +36,8 @@ namespace Features.ZenjectInstallers
             Container.DeclareSignal<StressChangedSignal>();
             Container.DeclareSignal<CoughFromBlowingSignal>();
             Container.DeclareSignal<StaminaChangedSignal>();
+            Container.DeclareSignal<StressMaxReachedSignal>();
+            Container.DeclareSignal<StressDroppedBelowMaxSignal>();
         }
 
         private void InstallClasses()
@@ -48,7 +50,7 @@ namespace Features.ZenjectInstallers
         private void InstallMonoClasses()
         {
             Container.Bind<HintUI>().FromInstance(hintUI).AsSingle();
-            Container.Bind<NoteUIController>().FromInstance(NoteUIController).AsSingle();
+            Container.Bind<NoteUI>().FromInstance(NoteUIController).AsSingle();
             Container.Bind<DialogueUI>().FromInstance(dialogueUI).AsSingle();
             Container.Bind<TextAnimator>().FromInstance(textAnimator).AsSingle();
             Container.Bind<TutorialUI>().FromInstance(tutorialUI).AsSingle();
