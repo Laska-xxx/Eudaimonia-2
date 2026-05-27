@@ -8,6 +8,7 @@ namespace Features.Interactable.NPS
     public class SpecialNPSInteractable : MonoBehaviour, IInteractable
     {
         public string HintText => "Говорить";
+        public bool DialogueWasPlayed => _dialogueWasPlayed;
 
         [SerializeField] private NpsPhrasesSO npsData;
 

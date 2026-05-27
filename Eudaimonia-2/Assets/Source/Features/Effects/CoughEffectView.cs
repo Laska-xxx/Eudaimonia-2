@@ -1,6 +1,7 @@
 using DG.Tweening;
 using Features.Player.Interact.Blowing;
 using Features.UI;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -15,7 +16,7 @@ namespace Features.Effects
         [Header("UI")]
         [SerializeField] private TextMeshProUGUI coughText;
         [SerializeField] private List<string> coughPhrases;
-
+        
         [Header("Cough Settings")]
         [SerializeField] private Volume postProcessVolume;
         [SerializeField] private float effectDuration = 2f;

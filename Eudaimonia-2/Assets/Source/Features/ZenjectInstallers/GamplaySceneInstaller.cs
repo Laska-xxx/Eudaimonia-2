@@ -18,6 +18,7 @@ namespace Features.ZenjectInstallers
         [SerializeField] private NoteUIController NoteUIController;
         [SerializeField] private DialogueUI dialogueUI;
         [SerializeField] private TextAnimator textAnimator;
+        [SerializeField] private TutorialUI tutorialUI;
 
         public override void InstallBindings()
         {
@@ -50,6 +51,7 @@ namespace Features.ZenjectInstallers
             Container.Bind<NoteUIController>().FromInstance(NoteUIController).AsSingle();
             Container.Bind<DialogueUI>().FromInstance(dialogueUI).AsSingle();
             Container.Bind<TextAnimator>().FromInstance(textAnimator).AsSingle();
+            Container.Bind<TutorialUI>().FromInstance(tutorialUI).AsSingle();
         }
 
         private void InstallSO()

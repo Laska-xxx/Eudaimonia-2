@@ -18,6 +18,7 @@ namespace Features.Player.Move
         [SerializeField] private PlayerViewProvider viewProvider;
         [SerializeField] private PlayerAnimator playerAnimator;
 
+        public MovementStateEnum CurrentState => _validator.CurrentState;
         private MovementSettingsSO _settings;
         private CharacterController _characterController;
         private PlayerMovementValidator _validator;

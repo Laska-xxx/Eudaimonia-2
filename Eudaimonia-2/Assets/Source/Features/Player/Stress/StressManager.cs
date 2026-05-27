@@ -6,6 +6,7 @@ namespace Features.Player.Stress
 {
     public class StressManager : ITickable
     {
+        public float CurrentStress => _currentStress;
         private float _currentStress;
         private float _maxStress = 100f;
 
