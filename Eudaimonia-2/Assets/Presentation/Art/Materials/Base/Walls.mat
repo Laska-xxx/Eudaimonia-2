@@ -106,7 +106,7 @@ Material:
     - _GlossyReflections: 0
     - _JitterResolution: 160
     - _Metallic: 0
-    - _Multiply: 1
+    - _Multiply: -20
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
