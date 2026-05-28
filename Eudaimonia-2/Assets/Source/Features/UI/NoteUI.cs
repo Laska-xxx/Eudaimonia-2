@@ -4,24 +4,28 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Zenject;
+using System;
 
 namespace Features.UI
 {
-    public class NoteUIController : MonoBehaviour
+    public class NoteUI : MonoBehaviour
     {
         public bool IsNoteOpen { get; private set; }
 
         [SerializeField] private UIPanel notePanel;
         [SerializeField] private TextMeshProUGUI noteText;
 
+        public event Action OnNoteClosed;
+
         private InputManager _inputManager;
+        private ActionMapType _curActionType;
 
         [Inject]
         private void Init(InputManager inputManager)
         {
             _inputManager = inputManager;
 
-            _inputManager.GameInput.UI.ClouseNote.performed += CloseNote;
+            _inputManager.GameInput.Note.CloseNote.performed += CloseNote;
         }
 
         private void Awake()
@@ -33,17 +37,20 @@ namespace Features.UI
         {
             if (_inputManager.GameInput != null)
             {
-                _inputManager.GameInput.UI.ClouseNote.performed -= CloseNote;
+                _inputManager.GameInput.Note.CloseNote.performed -= CloseNote;
             }
         }
 
         public void OpenNote(string text)
         {
+            print("open note");
+            print(_inputManager.CurrentActionMapType);
             IsNoteOpen = true;
             noteText.text = text;
             notePanel.Show();
 
-            _inputManager.SwitchActionMapType(ActionMapType.UI);
+            _curActionType = _inputManager.CurrentActionMapType;
+            _inputManager.SwitchActionMapType(ActionMapType.Note);
         }
 
         public void CloseNote(InputAction.CallbackContext ctx)
@@ -51,7 +58,11 @@ namespace Features.UI
             IsNoteOpen = false;
             notePanel.Hide();
 
-            _inputManager.SwitchActionMapType(ActionMapType.Game);
+            OnNoteClosed?.Invoke();
+
+            _inputManager.SwitchActionMapType(_curActionType);
+
+            print(_inputManager.CurrentActionMapType);
         }
     }
 }

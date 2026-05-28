@@ -3,19 +3,24 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Zenject;
 using Features.Player.Stress;
+using System;
 
 namespace Features.Player.Interact.Blowing
 {
     public class BlowingController : MonoBehaviour
     {
-        [SerializeField] private GameObject cigaretteObj;
-        [SerializeField] private Animator cigaretteAnimator;
-        [SerializeField] private ParticleSystem cigaretteLitVfx; 
-        [SerializeField] private ParticleSystem exhaleVfx;   
+        [SerializeField] private GameObject bubbleObj;
+        [SerializeField] private Animator bubbleAnimator;
+        [SerializeField] private ParticleSystem blowingVfx;   
 
         [SerializeField] private float maxInhaleTime = 5f;
         [SerializeField] private float stressReliefAmount = 15f;
         [SerializeField] private float stressReduceAmount = 10f;
+
+        public Action OnEquip;
+        public Action OnUnEquip;
+        public Action OnBlowingStarted;
+        public Action OnBlowingFinished;
 
         private PlayerInventory _inventory;
         private StressManager _stressManager;
@@ -54,14 +59,15 @@ namespace Features.Player.Interact.Blowing
         {
             if (_currentState == SmokeState.Starting)
             {
-                AnimatorStateInfo stateInfo = cigaretteAnimator.GetCurrentAnimatorStateInfo(0);
+                AnimatorStateInfo stateInfo = bubbleAnimator.GetCurrentAnimatorStateInfo(0);
 
                 if (stateInfo.IsName("CigaretteSmoking"))
                 {
                     _currentState = SmokeState.Smoking;
                     _inhaleTimer = 0f;
 
-                    cigaretteLitVfx.Play();
+                    blowingVfx.Play();
+                    OnBlowingStarted?.Invoke();
                 }
             }
             else if (_currentState == SmokeState.Smoking)
@@ -77,21 +83,23 @@ namespace Features.Player.Interact.Blowing
 
         private void ToggleSoapBubbles(InputAction.CallbackContext ctx)
         {
-            print(_currentState);
             if (_currentState == SmokeState.Starting || _currentState == SmokeState.Smoking) return;
 
             if (_currentState == SmokeState.Idle)
             {
                 Unequip();
+
+                OnUnEquip?.Invoke();
             }
             else if (_currentState == SmokeState.Unequipped)
             {
                 if (_inventory.TryConsumeCigarette())
                 {
                     _currentState = SmokeState.Idle;
-                    cigaretteObj.SetActive(true);
-                    cigaretteAnimator.Play("CigaretteIdle");
-                    print("Ecip");
+                    bubbleObj.SetActive(true);
+                    bubbleAnimator.Play("CigaretteIdle");
+
+                    OnEquip?.Invoke();
                 }
                 
             }
@@ -101,9 +109,8 @@ namespace Features.Player.Interact.Blowing
         {
             if (_currentState != SmokeState.Idle) return;
 
-            print("Start Smok");
             _currentState = SmokeState.Starting;
-            cigaretteAnimator.SetTrigger("Start Smok");
+            bubbleAnimator.SetTrigger("Start Smok");
         }
 
         private void StopBlow(InputAction.CallbackContext ctx)
@@ -112,7 +119,7 @@ namespace Features.Player.Interact.Blowing
             {
                 _currentState = SmokeState.Idle;
 
-                cigaretteAnimator.Play("CigaretteIdle");
+                bubbleAnimator.Play("CigaretteIdle");
             }
             else if (_currentState == SmokeState.Smoking)
             {
@@ -136,13 +143,13 @@ namespace Features.Player.Interact.Blowing
         private void EndBlowing()
         {
             _inventory.GetCigarette();
-            exhaleVfx.Play();
-            cigaretteLitVfx.Stop();
+            blowingVfx.Stop();
+            OnBlowingFinished?.Invoke();
 
             if (_inventory.TryConsumeCigarette())
             {
                 _currentState = SmokeState.Idle;
-                cigaretteAnimator.Play("CigaretteIdle");
+                bubbleAnimator.Play("CigaretteIdle");
                 return;
             }
 
@@ -152,7 +159,7 @@ namespace Features.Player.Interact.Blowing
         private void Unequip()
         {
             _currentState = SmokeState.Unequipped;
-            cigaretteObj.SetActive(false);
+            bubbleObj.SetActive(false);
         }
     }
 }

@@ -268,15 +268,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "Clouse Note",
-                    "type": "Button",
-                    "id": "a2867d71-20d3-4157-97cd-56c7715e7da6",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -290,15 +281,32 @@
                     "action": "Esc",
                     "isComposite": false,
                     "isPartOfComposite": false
-                },
+                }
+            ]
+        },
+        {
+            "name": "Note",
+            "id": "1a7044e6-0bfe-4465-a32b-37b2ed82699a",
+            "actions": [
+                {
+                    "name": "CloseNote",
+                    "type": "Button",
+                    "id": "08a8796c-a5ab-41f6-8b5f-b664ddf77373",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
                 {
                     "name": "",
-                    "id": "52df9465-ac38-45eb-84b1-e0663cd480a9",
+                    "id": "26c58640-a1bc-40b3-9c82-9a50f0081732",
                     "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Clouse Note",
+                    "action": "CloseNote",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

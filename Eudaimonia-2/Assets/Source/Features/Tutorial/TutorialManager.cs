@@ -15,7 +15,7 @@ using Zenject;
 public class TutorialManager : MonoBehaviour
 {
     [Header("Tutorial Settings")]
-    [SerializeField] private SpecialNPSInteractable _tutorialNPC;
+    [SerializeField] private SpecialNPC _tutorialNPC;
     [SerializeField] private PlayerMovement _playerMovement;
     [SerializeField] private PlayerInteractor _interactor;
 

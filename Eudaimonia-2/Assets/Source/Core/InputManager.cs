@@ -32,6 +32,9 @@ namespace Core
                 case ActionMapType.UI:
                     GameInput?.UI.Enable();
                     break;
+                case ActionMapType.Note:
+                    GameInput?.Note.Enable();
+                    break;
             }
 
             CurrentActionMapType = mapType;
@@ -48,6 +51,7 @@ namespace Core
     public enum ActionMapType
     {
         Game,
-        UI
+        UI,
+        Note
     }
 }

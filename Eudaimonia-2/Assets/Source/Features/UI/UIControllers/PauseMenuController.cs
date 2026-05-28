@@ -13,6 +13,7 @@ namespace Features.UI.UIControllers
         [SerializeField] private GameObject pausePanel;
         [SerializeField] private UIPanel settingsPanel;
 
+        private ActionMapType _curActionType;
         private InputManager _inputManager;
 
         [Inject]
@@ -47,7 +48,7 @@ namespace Features.UI.UIControllers
         public void TryContinue()
         {
             pausePanel.SetActive(false);
-            _inputManager.SwitchActionMapType(ActionMapType.Game);
+            _inputManager.SwitchActionMapType(_curActionType);
             Cursor.lockState = CursorLockMode.Locked;
             settingsPanel?.Hide();
         }
@@ -75,6 +76,7 @@ namespace Features.UI.UIControllers
         private void TryPause(InputAction.CallbackContext ctx)
         {
             pausePanel.SetActive(true);
+            _curActionType = _inputManager.CurrentActionMapType;
             _inputManager.SwitchActionMapType(ActionMapType.UI);
             Cursor.lockState = CursorLockMode.None;
         }
