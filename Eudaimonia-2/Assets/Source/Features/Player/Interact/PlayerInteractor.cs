@@ -26,6 +26,8 @@ namespace Features.Player.Interact
         private DialogueUI _dialogueUI;
         private IInteractable _currentInteractable;
 
+        private bool _isHintActive;
+
         [Inject]
         public void Init(InputManager inputManager, NoteUI noteUIController, PlayerInventory playerInventory, DialogueUI dialogueUI)
         {
@@ -50,13 +52,19 @@ namespace Features.Player.Interact
 
         private void Update()
         {
-            if (_noteUI.IsNoteOpen || Grabber.IsHoldingItem || _dialogueUI.IsActive)
+            if (Grabber.IsHoldingItem)
             {
                 if (_currentInteractable != null)
                 {
                     _currentInteractable = null;
-                    OnInteractableLost?.Invoke();
+                    HideHintSafe();
                 }
+                return;
+            }
+
+            if (_noteUI.IsNoteOpen || _dialogueUI.IsActive)
+            {
+                HideHintSafe();
                 return;
             }
 
@@ -70,6 +78,7 @@ namespace Features.Player.Interact
                     {
                         _currentInteractable = interactable;
                         OnInteractableFound?.Invoke(_currentInteractable.HintText);
+                        _isHintActive = true;
                     }
                     return;
                 }
@@ -78,7 +87,7 @@ namespace Features.Player.Interact
             if (_currentInteractable != null)
             {
                 _currentInteractable = null;
-                OnInteractableLost?.Invoke();
+                HideHintSafe();
             }
         }
 
@@ -86,17 +95,24 @@ namespace Features.Player.Interact
         {
             if (!ctx.performed) return;
 
-            print("try interact");
             if (Grabber.IsHoldingItem)
             {
                 Grabber.DropItem();
                 return;
             }
 
-            print(_currentInteractable);
             if (_currentInteractable != null && !_noteUI.IsNoteOpen)
             {
                 _currentInteractable.Interact(this);
+            }
+        }
+
+        private void HideHintSafe()
+        {
+            if (_isHintActive)
+            {
+                OnInteractableLost?.Invoke();
+                _isHintActive = false;
             }
         }
     }

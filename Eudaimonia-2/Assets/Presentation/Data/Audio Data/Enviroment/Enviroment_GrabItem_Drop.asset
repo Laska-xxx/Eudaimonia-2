@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AudioDataSO
   "<\u0421lips>k__BackingField":
   - {fileID: 8300000, guid: ee8b5209c80bd8641a0df1fb9818a697, type: 3}
-  <Volume>k__BackingField: 1
+  <Volume>k__BackingField: 0.4
   <UseRandomPitch>k__BackingField: 0
   <MinPitch>k__BackingField: 0.9
   <MaxPitch>k__BackingField: 1.1
