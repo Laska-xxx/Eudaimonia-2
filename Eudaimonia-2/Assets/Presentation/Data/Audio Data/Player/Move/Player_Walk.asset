@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54b238bbad2365d4086a199d7027d68e, type: 3}
   m_Name: Player_Walk
   m_EditorClassIdentifier: Assembly-CSharp::AudioDataSO
-  clips:
+  "<\u0421lips>k__BackingField":
   - {fileID: 8300000, guid: 5c1996e649a2e2440a09cac5650a4d0a, type: 3}
   - {fileID: 8300000, guid: b83014b4958299940a9bf4c0c4db0899, type: 3}
   - {fileID: 8300000, guid: 06c54d7b1c9545944a00c0050a5509fb, type: 3}
   - {fileID: 8300000, guid: d216bdd97a0ca8c4aaceae904f541af7, type: 3}
-  volume: 1
-  minPitch: 0.9
-  maxPitch: 1.1
+  <Volume>k__BackingField: 1
+  <UseRandomPitch>k__BackingField: 1
+  <MinPitch>k__BackingField: 0.9
+  <MaxPitch>k__BackingField: 1.1

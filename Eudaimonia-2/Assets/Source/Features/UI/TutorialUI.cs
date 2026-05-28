@@ -48,16 +48,23 @@ namespace Features.UI
             noButton.onClick.RemoveListener(ChoiceNo);
         }
 
+        private void Start()
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
+
         private void ChoiceYes()
         {
             starPanel.SetActive(false);
             _tutorialManager.StartTutorial();
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         private void ChoiceNo()
         {
             starPanel.SetActive(false); 
-            _tutorialManager.SkipTutorial(); 
+            _tutorialManager.SkipTutorial();
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         private void ShowHint(string text)

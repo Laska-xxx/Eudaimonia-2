@@ -6,6 +6,7 @@ using Features.Player.Interact.Blowing;
 using Features.Player.Data;
 using Features.Player.Move;
 using Features.Player.Stress;
+using Features.Player.Interact;
 
 namespace Core.Installers
 {
@@ -13,7 +14,7 @@ namespace Core.Installers
     {
         [SerializeField] private StressSettingsSO stressSettings;
         [SerializeField] private MovementSettingsSO movementSettings;
-        [SerializeField] private HintUI hintUI;
+        [SerializeField] private PlayerInteractor playerInteractor;
         [SerializeField] private NoteUI NoteUIController;
         [SerializeField] private DialogueUI dialogueUI;
         [SerializeField] private TextAnimator textAnimator;
@@ -48,7 +49,7 @@ namespace Core.Installers
 
         private void InstallMonoClasses()
         {
-            Container.Bind<HintUI>().FromInstance(hintUI).AsSingle();
+            Container.Bind<PlayerInteractor>().FromInstance(playerInteractor).AsSingle();
             Container.Bind<NoteUI>().FromInstance(NoteUIController).AsSingle();
             Container.Bind<DialogueUI>().FromInstance(dialogueUI).AsSingle();
             Container.Bind<TextAnimator>().FromInstance(textAnimator).AsSingle();

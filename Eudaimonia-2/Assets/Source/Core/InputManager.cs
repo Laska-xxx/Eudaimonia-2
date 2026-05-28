@@ -18,6 +18,7 @@ namespace Core
         {
             GameInput?.Player.Disable();
             GameInput?.UI.Disable();
+            GameInput?.Note.Disable();
         }
 
         public void SwitchActionMapType(ActionMapType mapType)

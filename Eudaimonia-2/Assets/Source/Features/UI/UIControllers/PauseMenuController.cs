@@ -25,7 +25,7 @@ namespace Features.UI.UIControllers
             _inputManager.GameInput.UI.Esc.performed += TryContinue;
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             if (_inputManager.GameInput != null)
             {

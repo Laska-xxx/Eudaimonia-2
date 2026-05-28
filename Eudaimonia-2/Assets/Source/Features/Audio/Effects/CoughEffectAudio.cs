@@ -11,6 +11,7 @@ namespace Features.Audio.Effects
         private SignalBus _signalBus;
         private AudioSource _audioSource;
 
+        [Inject]
         private void Init(SignalBus signalBus)
         {
             _signalBus = signalBus;

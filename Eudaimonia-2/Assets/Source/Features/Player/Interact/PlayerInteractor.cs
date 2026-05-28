@@ -2,6 +2,7 @@ using Core;
 using Features.Interactable;
 using Features.Player.Interact.Blowing;
 using Features.UI;
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Zenject;
@@ -17,18 +18,21 @@ namespace Features.Player.Interact
         public PlayerInventory Inventory { get; private set; }
         public PlayerGrabber Grabber { get; private set; }
 
+        public event Action<string> OnInteractableFound;
+        public event Action OnInteractableLost;
+
         private GameInput _gameInput;
-        private HintUI _interactionUI;
         private NoteUI _noteUI;
+        private DialogueUI _dialogueUI;
         private IInteractable _currentInteractable;
 
         [Inject]
-        public void Init(InputManager inputManager, HintUI interactionUI, NoteUI noteUIController, PlayerInventory playerInventory)
+        public void Init(InputManager inputManager, NoteUI noteUIController, PlayerInventory playerInventory, DialogueUI dialogueUI)
         {
             Inventory = playerInventory;
             _gameInput = inputManager.GameInput;
-            _interactionUI = interactionUI;
             _noteUI = noteUIController;
+            _dialogueUI = dialogueUI;
 
             _gameInput.Player.Interact.performed += TryInteract;
         }
@@ -38,7 +42,7 @@ namespace Features.Player.Interact
             Grabber = GetComponent<PlayerGrabber>();
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             if (_gameInput != null)
                 _gameInput.Player.Interact.performed -= TryInteract;
@@ -46,6 +50,16 @@ namespace Features.Player.Interact
 
         private void Update()
         {
+            if (_noteUI.IsNoteOpen || Grabber.IsHoldingItem || _dialogueUI.IsActive)
+            {
+                if (_currentInteractable != null)
+                {
+                    _currentInteractable = null;
+                    OnInteractableLost?.Invoke();
+                }
+                return;
+            }
+
             if (viewProvider.IsLookingAtLayer(interactableLayer, interactionDistance))
             {
                 IInteractable interactable = viewProvider.CurrentHit.collider.GetComponent<IInteractable>();
@@ -55,7 +69,7 @@ namespace Features.Player.Interact
                     if (_currentInteractable != interactable)
                     {
                         _currentInteractable = interactable;
-                        _interactionUI.ShowHint(_currentInteractable.HintText);
+                        OnInteractableFound?.Invoke(_currentInteractable.HintText);
                     }
                     return;
                 }
@@ -64,14 +78,16 @@ namespace Features.Player.Interact
             if (_currentInteractable != null)
             {
                 _currentInteractable = null;
-                _interactionUI.HideHint();
+                OnInteractableLost?.Invoke();
             }
         }
 
         private void TryInteract(InputAction.CallbackContext ctx)
         {
+            if (!ctx.performed) return;
+
             print("try interact");
-           if (Grabber.IsHoldingItem)
+            if (Grabber.IsHoldingItem)
             {
                 Grabber.DropItem();
                 return;

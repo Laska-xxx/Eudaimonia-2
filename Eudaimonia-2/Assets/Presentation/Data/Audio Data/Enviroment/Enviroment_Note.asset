@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54b238bbad2365d4086a199d7027d68e, type: 3}
   m_Name: Enviroment_Note
   m_EditorClassIdentifier: Assembly-CSharp::AudioDataSO
-  clips:
+  "<\u0421lips>k__BackingField":
   - {fileID: 8300000, guid: b1cfa111291b71f40b0acfde1707ab2b, type: 3}
-  volume: 1
-  minPitch: 0.9
-  maxPitch: 1.1
+  <Volume>k__BackingField: 1
+  <UseRandomPitch>k__BackingField: 0
+  <MinPitch>k__BackingField: 0.9
+  <MaxPitch>k__BackingField: 1.1

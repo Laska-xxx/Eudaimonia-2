@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54b238bbad2365d4086a199d7027d68e, type: 3}
   m_Name: Effect_HeartBeat
   m_EditorClassIdentifier: Assembly-CSharp::AudioDataSO
-  clips:
-  - {fileID: 8300000, guid: a2bf9e0f82c53e647a28eda5d4ea9181, type: 3}
-  volume: 0.3
-  minPitch: 1
-  maxPitch: 1
+  "<\u0421lips>k__BackingField":
+  - {fileID: 8300000, guid: b83014b4958299940a9bf4c0c4db0899, type: 3}
+  <Volume>k__BackingField: 1
+  <UseRandomPitch>k__BackingField: 0
+  <MinPitch>k__BackingField: 0.9
+  <MaxPitch>k__BackingField: 1.1

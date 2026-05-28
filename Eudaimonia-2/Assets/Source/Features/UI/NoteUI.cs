@@ -1,10 +1,11 @@
-using Features.UI.DoTween;
 using Core;
+using Cysharp.Threading.Tasks;
+using Features.UI.DoTween;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Zenject;
-using System;
 
 namespace Features.UI
 {
@@ -33,7 +34,7 @@ namespace Features.UI
             notePanel.gameObject.SetActive(false);
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             if (_inputManager.GameInput != null)
             {

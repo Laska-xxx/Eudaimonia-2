@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 54b238bbad2365d4086a199d7027d68e, type: 3}
-  m_Name: Effect_Cough
+  m_Name: Enviroment_GrabItem_Grab
   m_EditorClassIdentifier: Assembly-CSharp::AudioDataSO
   "<\u0421lips>k__BackingField":
-  - {fileID: 8300000, guid: 5c1996e649a2e2440a09cac5650a4d0a, type: 3}
+  - {fileID: 8300000, guid: b3bdc50d99b898144a5c18f95068e171, type: 3}
   <Volume>k__BackingField: 1
   <UseRandomPitch>k__BackingField: 0
   <MinPitch>k__BackingField: 0.9

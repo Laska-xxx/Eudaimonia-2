@@ -14,6 +14,8 @@ namespace Features.UI
         [SerializeField] private TextMeshProUGUI _phraseText;
         [SerializeField] private float _phraseDuration = 10f;
 
+        public bool IsActive { get; private set; }
+
         private TextAnimator _textAnimator;
         private Coroutine _waitBeforeCoroutine;
 
@@ -25,8 +27,6 @@ namespace Features.UI
         public event Action<string> OnTypingStarted;
         public event Action<string> OnTypingFinished;
 
-        public bool IsActive => _dialoguePanel.activeSelf;
-
         [Inject]
         private void Init(TextAnimator textAnimator)
         {
@@ -37,9 +37,10 @@ namespace Features.UI
         {
             Close();
         }
-        //показывает фразу
+
         public void ShowPhrase(string name, string phrase)
         {
+            IsActive = true;
             _isDialogueMode = false;
             StopAllCoroutines();
 
@@ -49,9 +50,10 @@ namespace Features.UI
             OnTypingStarted?.Invoke(name);
             _textAnimator.StartTyping(phrase, _phraseText, OnPhraseTyped);
         }
-        //показывает диалог
+        
         public void ShowDialogue(string name, List<string> dialogue, Action onComplete)
         {
+            IsActive = true;
             _isDialogueMode = true;
             _currentDialogue = dialogue;
             _onDialogueComplete = onComplete;
@@ -62,7 +64,7 @@ namespace Features.UI
 
             PlayCurrentPhrase();
         }
-        //показывает фразу из диалога
+        
         private void PlayCurrentPhrase()
         {
             if (_waitBeforeCoroutine != null) StopCoroutine(_waitBeforeCoroutine);
@@ -72,7 +74,7 @@ namespace Features.UI
             OnTypingStarted?.Invoke(_nameText.text);
             _textAnimator.StartTyping(phrase, _phraseText, OnPhraseTyped);
         }
-        //после напечатования фразы
+        
         private void OnPhraseTyped()
         {
             OnTypingFinished?.Invoke(_nameText.text);
@@ -86,14 +88,12 @@ namespace Features.UI
             _waitBeforeCoroutine = StartCoroutine(WaitBefore(Close));
         }
 
-        //ждет перелистование
         private IEnumerator WaitBefore(Action action)
         {
             yield return new WaitForSeconds(_phraseDuration);
             action?.Invoke();
         }
         
-        //попытка перелистнуть
         public void TryAdvance()
         {
             if (_textAnimator.IsTyping) return;
@@ -106,7 +106,7 @@ namespace Features.UI
 
             Close();
         }
-        //следующая фраза / конец диалога
+        
         private void AdvanceDialogue()
         {
             if (_waitBeforeCoroutine != null) StopCoroutine(_waitBeforeCoroutine);
@@ -122,13 +122,15 @@ namespace Features.UI
                 PlayCurrentPhrase();
             }
         }
-        //закрыть диологовое окно
+        
         public void Close()
         {
             if (_nameText != null && !string.IsNullOrEmpty(_nameText.text))
             {
                 OnTypingFinished?.Invoke(_nameText.text);
             }
+
+            IsActive = false;
 
             StopAllCoroutines();
             if (_textAnimator != null) _textAnimator.StopTyping();
