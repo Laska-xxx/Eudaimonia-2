@@ -44813,12 +44813,12 @@ PrefabInstance:
       objectReference: {fileID: 372554503}
     - target: {fileID: 4175020894585808528, guid: 67496d3d646c6e8438d28634934d75fb, type: 3}
       propertyPath: m_VersionIndex
-      value: 2054
+      value: 2057
       objectReference: {fileID: 0}
     - target: {fileID: 5091911073471066824, guid: 67496d3d646c6e8438d28634934d75fb, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 1959165763}
+      objectReference: {fileID: 372554503}
     - target: {fileID: 9103693682265597976, guid: 67496d3d646c6e8438d28634934d75fb, type: 3}
       propertyPath: m_Mesh
       value: 
