@@ -382,7 +382,6 @@ GameObject:
   - component: {fileID: 641899190127124317}
   - component: {fileID: 7029295374661502359}
   - component: {fileID: 4132439508933916530}
-  - component: {fileID: 5977073255325974988}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -447,9 +446,12 @@ MonoBehaviour:
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 64
+  ladderLayer:
+    serializedVersion: 2
+    m_Bits: 512
   viewHandler: {fileID: 7520209466297210587}
+  viewProvider: {fileID: 6579406351741867758}
   playerAnimator: {fileID: 4132439508933916530}
-  ladderDetector: {fileID: 5977073255325974988}
 --- !u!114 &4909513781815268914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -513,7 +515,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b30a6aff599559e49b4d3e941fa05ffd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimator
-  playerMovement: {fileID: 5318406848311066605}
   viewLevel: {fileID: 4540132030261648024}
   motionPivot: {fileID: 8656009336243306129}
   walkAmplitude: 0.3
@@ -522,22 +523,6 @@ MonoBehaviour:
   sprintSpeed: 0.2
   squatAmplitude: 0.25
   squatSpeed: 0.4
---- !u!114 &5977073255325974988
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2622492769726912094}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4eb940a932a65ae46a7ae64f98aeda3c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Features.Player.Move.LadderDetector
-  viewProvider: {fileID: 6579406351741867758}
-  ladderLayer:
-    serializedVersion: 2
-    m_Bits: 512
 --- !u!1 &4696652703625167936
 GameObject:
   m_ObjectHideFlags: 0
