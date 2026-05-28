@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: Enviroment_NPC
   m_EditorClassIdentifier: Assembly-CSharp::AudioDataSO
   "<\u0421lips>k__BackingField":
-  - {fileID: 8300000, guid: f35bccebf9287054fbf4e3a1057a36d3, type: 3}
-  <Volume>k__BackingField: 1
+  - {fileID: 8300000, guid: 0def9b31c33352a4da80b7817fe79a5c, type: 3}
+  - {fileID: 8300000, guid: bf86d27d66e579045bb9bf7a448af2a8, type: 3}
+  <Volume>k__BackingField: 0.6
   <UseRandomPitch>k__BackingField: 1
   <MinPitch>k__BackingField: 1
-  <MaxPitch>k__BackingField: 2.5
+  <MaxPitch>k__BackingField: 1.5

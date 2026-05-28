@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Effect_Cough
   m_EditorClassIdentifier: Assembly-CSharp::AudioDataSO
   "<\u0421lips>k__BackingField":
-  - {fileID: 8300000, guid: 5c1996e649a2e2440a09cac5650a4d0a, type: 3}
-  <Volume>k__BackingField: 1
+  - {fileID: 8300000, guid: 5794a098b2af6a84abbc09edb8c9912d, type: 3}
+  <Volume>k__BackingField: 0.8
   <UseRandomPitch>k__BackingField: 0
   <MinPitch>k__BackingField: 0.9
   <MaxPitch>k__BackingField: 1.1

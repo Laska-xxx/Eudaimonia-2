@@ -15,7 +15,6 @@ MonoBehaviour:
   "<\u0421lips>k__BackingField":
   - {fileID: 8300000, guid: 353931abe848e8441af45e3014960741, type: 3}
   - {fileID: 8300000, guid: e6796337a090cdf429fe81cca559a2a8, type: 3}
-  - {fileID: 8300000, guid: 2b22ffc4d71eb2149806a47806927ae7, type: 3}
   <Volume>k__BackingField: 1
   <UseRandomPitch>k__BackingField: 1
   <MinPitch>k__BackingField: 1.1
