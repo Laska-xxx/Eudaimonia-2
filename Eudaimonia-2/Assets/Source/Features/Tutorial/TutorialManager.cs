@@ -42,7 +42,18 @@ public class TutorialManager : MonoBehaviour
     private void Start()
     {
         _cts = new CancellationTokenSource();
+        LockAllMechanics();
+    }
+
+    public void StartTutorial()
+    {
         RunTutorialSequence(_cts.Token).Forget();
+    }
+    public void SkipTutorial()
+    {
+        _gameInput.Player.Enable();
+
+        gameObject.SetActive(false);
     }
 
     private void OnDestroy()
@@ -56,8 +67,6 @@ public class TutorialManager : MonoBehaviour
 
     private async UniTaskVoid RunTutorialSequence(CancellationToken token)
     {
-        LockAllMechanics();
-
         #region Move
         _gameInput.Player.Move.Enable();
         OnHintShow?.Invoke("Я думаю стоит использовать [WASD] для передвижения");

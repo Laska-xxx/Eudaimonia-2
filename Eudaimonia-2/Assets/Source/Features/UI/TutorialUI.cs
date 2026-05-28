@@ -1,13 +1,20 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using Zenject;
 
 namespace Features.UI
 {
     public class TutorialUI : MonoBehaviour
     {
+        [Header("Hint")]
         [SerializeField] private TextMeshProUGUI hintText;
         [SerializeField] private GameObject uiPanel;
+
+        [Header("Start Panel")]
+        [SerializeField] private GameObject starPanel;
+        [SerializeField] private Button yesButton;
+        [SerializeField] private Button noButton;
 
         private TutorialManager _tutorialManager;
 
@@ -24,6 +31,9 @@ namespace Features.UI
                 _tutorialManager.OnHintShow += ShowHint;
                 _tutorialManager.OnHintHide += HideHint;
             }
+
+            yesButton.onClick.AddListener(ChoiceYes);
+            noButton.onClick.AddListener(ChoiceNo);
         }
 
         private void OnDisable()
@@ -33,6 +43,21 @@ namespace Features.UI
                 _tutorialManager.OnHintShow -= ShowHint;
                 _tutorialManager.OnHintHide -= HideHint;
             }
+
+            yesButton.onClick.RemoveListener(ChoiceYes);
+            noButton.onClick.RemoveListener(ChoiceNo);
+        }
+
+        private void ChoiceYes()
+        {
+            starPanel.SetActive(false);
+            _tutorialManager.StartTutorial();
+        }
+
+        private void ChoiceNo()
+        {
+            starPanel.SetActive(false); 
+            _tutorialManager.SkipTutorial(); 
         }
 
         private void ShowHint(string text)
