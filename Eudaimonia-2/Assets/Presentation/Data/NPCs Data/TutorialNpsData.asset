@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cb01a9c24e4aae44c8912120805fa73a, type: 3}
-  m_Name: SpecialNpsData
+  m_Name: TutorialNpsData
   m_EditorClassIdentifier: Assembly-CSharp::NpsPhrasesSO
   <NpsName>k__BackingField: "\u0414\u0430\u0448\u0430"
   <NpsPhrases>k__BackingField:
@@ -23,5 +23,5 @@ MonoBehaviour:
     \u043D\u0430\u0440\u0443\u0436\u0443, \u043C\u043E\u0436\u0435\u0442 \u0437\u043D\u0430\u043A\u043E\u043C\u044B\u0435
     \u043C\u0435\u0441\u0442\u0430 \u043F\u043E\u043C\u043E\u0433\u0443\u0442 \u0442\u0435\u0431\u0435
     \u0432\u0441\u0435 \u0432\u0441\u043F\u043E\u043C\u043D\u0438\u0442\u044C"
-  <EndPhrase>k__BackingField: "\u041A\u043E\u043D\u0435\u0446 \u0441\u0435\u043C\u0435\u0441\u0442\u0440\u0430
-    \u0441\u043A\u043E\u0440\u043E"
+  <EndPhrase>k__BackingField: "\u0412\u044B\u0431\u0435\u0440\u0438\u0441\u044C \u043D\u0430
+    \u043F\u043E\u0432\u0435\u0440\u0445\u043D\u043E\u0441\u0442\u044C"

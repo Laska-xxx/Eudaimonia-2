@@ -9,8 +9,9 @@ using Features.Player.Stress;
 using System;
 using System.Threading;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using Zenject;
+
+using UnityEngine.InputSystem;
 
 public class TutorialManager : MonoBehaviour
 {

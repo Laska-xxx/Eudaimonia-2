@@ -11,11 +11,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Presentation/Scenes/misha.unity
     guid: 5c5218d1ad082cc4d8ddeba58b80c78a
-  - enabled: 1
-    path: Assets/Presentation/Scenes/DevScene.unity
-    guid: 7a230c7d75fa0a343867843941698347
-  - enabled: 0
-    path: Assets/Presentation/Scenes/PresentationScene.unity
-    guid: 355b18455c442834cb6daf0794042647
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
