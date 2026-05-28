@@ -25,6 +25,6 @@ public class SoapBubblesAudio : MonoBehaviour
 
     private void PlayPickup()
     {
-        AudioSource.PlayClipAtPoint(pickupSound.clips[Random.Range(0, pickupSound.clips.Length)], transform.position, pickupSound.volume);
+        AudioSource.PlayClipAtPoint(pickupSound.Сlips[Random.Range(0, pickupSound.Сlips.Length)], transform.position, pickupSound.Volume);
     }
 }

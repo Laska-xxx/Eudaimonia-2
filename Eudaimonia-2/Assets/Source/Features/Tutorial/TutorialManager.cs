@@ -7,6 +7,7 @@ using Features.Player.Move;
 using Features.Player.Move.MoveStates;
 using Features.Player.Stress;
 using Features.UI;
+using System;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -19,23 +20,23 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private PlayerMovement _playerMovement;
     [SerializeField] private PlayerInteractor _interactor;
 
+    public event Action OnTaskCompleted;
+    public event Action<string> OnHintShow;
+    public event Action OnHintHide;
+
     private InputManager _inputManager;
     private GameInput _gameInput;
-
     private PlayerInventory _inventory;
     private StressManager _stressManager;
-    private TutorialUI _tutorialUI;
-
     private CancellationTokenSource _cts;
 
     [Inject]
-    private void Init(InputManager inputManager, PlayerInventory inventory, StressManager stressManager, TutorialUI tutorialUI)
+    private void Init(InputManager inputManager, PlayerInventory inventory, StressManager stressManager)
     {
         _inputManager = inputManager;
         _gameInput = _inputManager.GameInput;
         _inventory = inventory;
         _stressManager = stressManager;
-        _tutorialUI = tutorialUI;
     }
 
     private void Start()
@@ -57,72 +58,122 @@ public class TutorialManager : MonoBehaviour
     {
         LockAllMechanics();
 
+        #region Move
         _gameInput.Player.Move.Enable();
-        _tutorialUI.ShowHint("Используйте [WASD] для перемещения");
+        OnHintShow?.Invoke("Я думаю стоит использовать [WASD] для передвижения");
         await UniTask.Delay(3000, cancellationToken: token);
+        #endregion
 
+        #region Jump
         _gameInput.Player.Jump.Enable();
-        _tutorialUI.ShowHint("Нажмите [SPACE] для прыжка");
+        OnHintShow?.Invoke("Кажется на [SPACE] я смогу прыгнуть");
 
         bool hasJumped = false;
         void OnJump(InputAction.CallbackContext ctx) => hasJumped = true;
-
         _gameInput.Player.Jump.performed += OnJump;
         await UniTask.WaitUntil(() => hasJumped, cancellationToken: token);
         _gameInput.Player.Jump.performed -= OnJump;
 
-        _gameInput.Player.Squat.Enable();
-        _tutorialUI.ShowHint("Нажмите [CTRL] для приседа");
-        await UniTask.WaitUntil(() => _playerMovement.CurrentState == MovementStateEnum.Squatting, cancellationToken: token);
-        _tutorialUI.HideHint();
+        OnHintHide?.Invoke();
+        OnTaskCompleted?.Invoke();
         await UniTask.Delay(1000, cancellationToken: token);
+        #endregion
 
+        #region Squat
+        _gameInput.Player.Squat.Enable();
+        OnHintShow?.Invoke("Я чувствую что то внутри... На [CTRL] я могу присесть!");
+        await UniTask.WaitUntil(() => _playerMovement.CurrentState == MovementStateEnum.Squatting, cancellationToken: token);
+        OnHintHide?.Invoke();
+        OnTaskCompleted?.Invoke();
+        await UniTask.Delay(1000, cancellationToken: token);
+        #endregion
+
+        #region Sprint
+        _gameInput.Player.Sprint.Enable();
+        OnHintShow?.Invoke("А бегать, похоже, на [SHIFT]");
+        await UniTask.WaitUntil(() => _playerMovement.CurrentState == MovementStateEnum.Sprinting, cancellationToken: token);
+        OnHintHide?.Invoke();
+        OnTaskCompleted?.Invoke();
+        await UniTask.Delay(1000, cancellationToken: token);
+        #endregion
+
+        #region Get Bubbles
         _gameInput.Player.Interact.Enable();
 
-        _stressManager.AddStress(50f);
-        _tutorialUI.ShowHint("Уровень стресса повышен...");
+        OnHintShow?.Invoke("Я видел на полу пузырики, хочу подобрать их на [E]");
+        int startBubbles = _inventory.SoapBubblesCount;
+        await UniTask.WaitUntil(() => startBubbles < _inventory.SoapBubblesCount, cancellationToken: token);
+
+        _gameInput.Player.Interact.Disable();
+        OnHintHide?.Invoke();
+        OnTaskCompleted?.Invoke();
+        await UniTask.Delay(1000, cancellationToken: token);
+        #endregion
+
+        #region Reduse Stress
+        _stressManager.AddStress(30f);
+        OnHintShow?.Invoke("Мой уровень стресса постепенно повысился...");
         await UniTask.Delay(3000, cancellationToken: token);
 
         _gameInput.Player.EquipCigarette.Enable();
         _gameInput.Player.Smoke.Enable();
 
-        _tutorialUI.ShowHint("Достаньте мыльные пузыри [1] и зажмите [LKM], чтобы успокоиться");
+        OnHintShow?.Invoke("Надо взять пузырики в руку на [1], и подуть их, зажав [LKM], что бы успокоится");
 
         int initialBubbles = _inventory.SoapBubblesCount;
-        await UniTask.WaitUntil(() => _inventory.SoapBubblesCount < initialBubbles || _stressManager.CurrentStress < 50f, cancellationToken: token);
+        await UniTask.WaitUntil(() => _inventory.SoapBubblesCount < initialBubbles || _stressManager.CurrentStress < 30f, cancellationToken: token);
 
-        _tutorialUI.HideHint();
-        _tutorialUI.ShowHint("У тебя хорошо получается");
+        OnHintHide?.Invoke();
+        OnTaskCompleted?.Invoke();
+        OnHintShow?.Invoke("Это и правда успокаивает. Хе хе");
         await UniTask.Delay(2000, cancellationToken: token);
+        #endregion
 
-        _tutorialUI.ShowHint("Подойдите к персонажу и поговорите с ним на [E]");
+        #region Speak With NPC
+        _gameInput.Player.Interact.Enable();
+        OnHintShow?.Invoke("Надо бы найти кого-нибудь и поговорить с ним на [E]");
+
 
         await UniTask.WaitUntil(() => _tutorialNPC.DialogueWasPlayed, cancellationToken: token);
 
-        _tutorialUI.HideHint();
+        OnHintHide?.Invoke();
+        OnTaskCompleted?.Invoke();
         await UniTask.Delay(1000, cancellationToken: token);
+        #endregion
 
-        _tutorialUI.ShowHint("Наведитесь на ящик и нажмите [E], чтобы взять его");
+        #region Grab Item
+        OnHintShow?.Invoke("Мне нужно расчистить поход к лестнице. Хорошо, что я умею брать предметы на [E]");
 
         await UniTask.WaitUntil(() => _interactor.Grabber.IsHoldingItem, cancellationToken: token);
 
-        _tutorialUI.ShowHint("Теперь отпустите предмет так же на [E]");
+        OnHintHide?.Invoke();
+        OnTaskCompleted?.Invoke();
+        await UniTask.Delay(1000, cancellationToken: token);
+        #endregion
+
+        #region Drop Item
+        OnHintShow?.Invoke("Что бы бросить предмет нужно так же нажать [E]");
         await UniTask.WaitUntil(() => !_interactor.Grabber.IsHoldingItem, cancellationToken: token);
 
-        _tutorialUI.HideHint();
+        OnHintHide?.Invoke();
+        OnTaskCompleted?.Invoke();
         await UniTask.Delay(1000, cancellationToken: token);
+        #endregion
 
-        _tutorialUI.ShowHint("Подойдите к лестнице, посмотрите вверх и двигайтесь вперед, чтобы залезть на нее");
+        #region Climbing
+        OnHintShow?.Invoke("Пора выдираться из бункера, мне нужно подойти к лестнице и двигаться вперед, смотря вверх");
 
         await UniTask.WaitUntil(() => _playerMovement.CurrentState == MovementStateEnum.Climbing, cancellationToken: token);
 
-        _tutorialUI.HideHint();
+        OnHintHide?.Invoke();
 
-        _tutorialUI.ShowHint("Туториал успешно пройден!");
+        await UniTask.WaitUntil(() => _playerMovement.CurrentState != MovementStateEnum.Climbing, cancellationToken: token);
+        OnHintShow?.Invoke("Похоже я всему научился");
+        OnTaskCompleted?.Invoke();
         await UniTask.Delay(3000, cancellationToken: token);
-        _tutorialUI.HideHint();
+        OnHintHide?.Invoke();
+        #endregion
 
-        _gameInput.Player.Sprint.Enable();
         _gameInput.Player.Enable();
     }
 

@@ -2,7 +2,7 @@ using Features.Player.Interact.Blowing;
 using UnityEngine;
 using Zenject;
 
-namespace Features.Audio
+namespace Features.Audio.Effects
 {
     public class CoughEffectAudio : MonoBehaviour
     {

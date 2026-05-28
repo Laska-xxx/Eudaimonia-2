@@ -1,4 +1,3 @@
-using Core;
 using Features.Player;
 using Features.UI;
 using UnityEngine;
@@ -8,7 +7,7 @@ using Features.Player.Data;
 using Features.Player.Move;
 using Features.Player.Stress;
 
-namespace Features.ZenjectInstallers
+namespace Core.Installers
 {
     public class GamplaySceneInstaller : MonoInstaller
     {
@@ -18,7 +17,7 @@ namespace Features.ZenjectInstallers
         [SerializeField] private NoteUI NoteUIController;
         [SerializeField] private DialogueUI dialogueUI;
         [SerializeField] private TextAnimator textAnimator;
-        [SerializeField] private TutorialUI tutorialUI;
+        [SerializeField] private TutorialManager tutorialManager;
 
         public override void InstallBindings()
         {
@@ -53,7 +52,7 @@ namespace Features.ZenjectInstallers
             Container.Bind<NoteUI>().FromInstance(NoteUIController).AsSingle();
             Container.Bind<DialogueUI>().FromInstance(dialogueUI).AsSingle();
             Container.Bind<TextAnimator>().FromInstance(textAnimator).AsSingle();
-            Container.Bind<TutorialUI>().FromInstance(tutorialUI).AsSingle();
+            Container.Bind<TutorialManager>().FromInstance(tutorialManager).AsSingle();
         }
 
         private void InstallSO()

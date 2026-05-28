@@ -2,18 +2,15 @@ using DG.Tweening;
 using UnityEngine;
 using Zenject;
 
-namespace Features.Audio
+namespace Features.Audio.Effects
 {
     public class PanicEffectAudio : MonoBehaviour
     {
-        [Header("Components")]
-        [SerializeField] private AudioSource audioSource;
-
         [Header("Sound Settings")]
         [SerializeField] private AudioDataSO heartBeat;
-        [SerializeField] private float audioVolume = 1f;
         [SerializeField] private float audioFadeDuration = 1f;
 
+        private AudioSource _audioSource;
         private SignalBus _signalBus;
         private Tweener _audioTween;
 
@@ -37,15 +34,20 @@ namespace Features.Audio
             _audioTween?.Kill();
         }
 
+        private void Awake()
+        {
+            _audioSource = GetComponent<AudioSource>();
+        }
+
         private void StartPanicAudio()
         {
             _audioTween?.Kill();
 
-            audioSource.volume = 0f;
-            audioSource.loop = true;
-            heartBeat.Play(audioSource);
+            _audioSource.volume = 0f;
+            _audioSource.loop = true;
+            heartBeat.Play(_audioSource);
 
-            _audioTween = audioSource.DOFade(audioVolume, audioFadeDuration)
+            _audioTween = _audioSource.DOFade(heartBeat.Volume, audioFadeDuration)
                 .SetEase(Ease.InOutSine);
         }
 
@@ -53,9 +55,9 @@ namespace Features.Audio
         {
             _audioTween?.Kill();
 
-            _audioTween = audioSource.DOFade(0f, audioFadeDuration)
+            _audioTween = _audioSource.DOFade(0f, audioFadeDuration)
                 .SetEase(Ease.InOutSine)
-                .OnComplete(() => audioSource.Stop());
+                .OnComplete(() => _audioSource.Stop());
         }
     }
 }
