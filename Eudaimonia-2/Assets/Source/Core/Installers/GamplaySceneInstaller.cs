@@ -45,6 +45,7 @@ namespace Core.Installers
             Container.Bind<InputManager>().AsSingle();
             Container.BindInterfacesAndSelfTo<StressManager>().AsSingle();
             Container.Bind<PlayerInventory>().AsSingle();
+            Container.Bind<CursorManager>().AsSingle();
         }
 
         private void InstallMonoClasses()

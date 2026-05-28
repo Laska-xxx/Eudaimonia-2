@@ -17330,6 +17330,7 @@ MonoBehaviour:
   dialogueUI: {fileID: 1315589644}
   textAnimator: {fileID: 475336317}
   tutorialManager: {fileID: 1981378888}
+  cursorManager: {fileID: 0}
 --- !u!114 &1947409983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18898,7 +18899,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2133963522
 MonoBehaviour:
   m_ObjectHideFlags: 0

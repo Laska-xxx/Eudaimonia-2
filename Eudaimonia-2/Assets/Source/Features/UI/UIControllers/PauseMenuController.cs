@@ -15,11 +15,13 @@ namespace Features.UI.UIControllers
 
         private ActionMapType _curActionType;
         private InputManager _inputManager;
+        private CursorManager _cursorManager;
 
         [Inject]
-        private void Init(InputManager inputManager)
+        private void Init(InputManager inputManager, CursorManager cursorManager)
         {
             _inputManager = inputManager;
+            _cursorManager = cursorManager;
 
             _inputManager.GameInput.Player.Esc.performed += TryPause;
             _inputManager.GameInput.UI.Esc.performed += TryContinue;
@@ -49,7 +51,7 @@ namespace Features.UI.UIControllers
         {
             pausePanel.SetActive(false);
             _inputManager.SwitchActionMapType(_curActionType);
-            Cursor.lockState = CursorLockMode.Locked;
+            _cursorManager.LockCursor();
             settingsPanel?.Hide();
         }
 
@@ -78,7 +80,7 @@ namespace Features.UI.UIControllers
             pausePanel.SetActive(true);
             _curActionType = _inputManager.CurrentActionMapType;
             _inputManager.SwitchActionMapType(ActionMapType.UI);
-            Cursor.lockState = CursorLockMode.None;
+            _cursorManager.UnlockCursor();
         }
     }
 }

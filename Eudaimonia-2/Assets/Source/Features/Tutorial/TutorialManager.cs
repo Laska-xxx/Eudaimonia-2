@@ -29,30 +29,36 @@ public class TutorialManager : MonoBehaviour
     private PlayerInventory _inventory;
     private StressManager _stressManager;
     private CancellationTokenSource _cts;
+    private CursorManager _cursorManager;
 
     [Inject]
-    private void Init(InputManager inputManager, PlayerInventory inventory, StressManager stressManager)
+    private void Init(InputManager inputManager, PlayerInventory inventory, StressManager stressManager, CursorManager cursorManager)
     {
         _inputManager = inputManager;
         _gameInput = _inputManager.GameInput;
         _inventory = inventory;
         _stressManager = stressManager;
+        _cursorManager = cursorManager;
     }
 
     private void Start()
     {
         _cts = new CancellationTokenSource();
         LockAllMechanics();
+        _gameInput.Player.Esc.Enable();
+        _cursorManager.UnlockCursor();
     }
 
     public void StartTutorial()
     {
+        _cursorManager.LockCursor();
         RunTutorialSequence(_cts.Token).Forget();
     }
+
     public void SkipTutorial()
     {
         _gameInput.Player.Enable();
-
+        _cursorManager.LockCursor();
         gameObject.SetActive(false);
     }
 

@@ -25,11 +25,6 @@ public class CameraHandler : MonoBehaviour
         _mouseLookAction = null;
     }
 
-    void Start()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-    }
-
     void Update()
     {
         Vector2 lookVector = _mouseLookAction.ReadValue<Vector2>();
