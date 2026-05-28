@@ -1,10 +1,11 @@
 using Core;
-using Cysharp.Threading.Tasks;
+using Features.Interactable.Environment;
 using Features.UI.DoTween;
 using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 using Zenject;
 
 namespace Features.UI
@@ -14,7 +15,7 @@ namespace Features.UI
         public bool IsNoteOpen { get; private set; }
 
         [SerializeField] private UIPanel notePanel;
-        [SerializeField] private TextMeshProUGUI noteText;
+        [SerializeField] private Image noteImage;
 
         public event Action OnNoteClosed;
 
@@ -42,12 +43,10 @@ namespace Features.UI
             }
         }
 
-        public void OpenNote(string text)
+        public void OpenNote(NoteDataSO noteData)
         {
-            print("open note");
-            print(_inputManager.CurrentActionMapType);
             IsNoteOpen = true;
-            noteText.text = text;
+            noteImage.sprite = noteData.NoteImage;
             notePanel.Show();
 
             _curActionType = _inputManager.CurrentActionMapType;

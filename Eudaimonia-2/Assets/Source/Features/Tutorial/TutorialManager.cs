@@ -6,7 +6,6 @@ using Features.Player.Interact.Blowing;
 using Features.Player.Move;
 using Features.Player.Move.MoveStates;
 using Features.Player.Stress;
-using Features.UI;
 using System;
 using System.Threading;
 using UnityEngine;
