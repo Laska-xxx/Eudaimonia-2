@@ -145,11 +145,11 @@ namespace Features.Player.Interact.Blowing
             _inventory.GetCigarette();
             blowingVfx.Stop();
             OnBlowingFinished?.Invoke();
+            bubbleAnimator.Play("CigaretteIdle");
 
             if (_inventory.TryConsumeCigarette())
             {
                 _currentState = SmokeState.Idle;
-                bubbleAnimator.Play("CigaretteIdle");
                 return;
             }
 

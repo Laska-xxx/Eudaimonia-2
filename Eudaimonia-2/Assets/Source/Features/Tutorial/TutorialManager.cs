@@ -126,8 +126,7 @@ public class TutorialManager : MonoBehaviour
         #endregion
 
         #region Reduse Stress
-        _stressManager.AddStress(30f);
-        OnHintShow?.Invoke("Мой уровень стресса постепенно повысился...");
+        OnHintShow?.Invoke("Мой уровень стресса постепенно повышается...");
         await UniTask.Delay(3000, cancellationToken: token);
 
         _gameInput.Player.EquipCigarette.Enable();
@@ -136,7 +135,8 @@ public class TutorialManager : MonoBehaviour
         OnHintShow?.Invoke("Надо взять пузырики в руку на [1], и подуть их, зажав [LKM], что бы успокоится");
 
         int initialBubbles = _inventory.SoapBubblesCount;
-        await UniTask.WaitUntil(() => _inventory.SoapBubblesCount < initialBubbles || _stressManager.CurrentStress < 30f, cancellationToken: token);
+        float curStress = _stressManager.CurrentStress;
+        await UniTask.WaitUntil(() => _inventory.SoapBubblesCount < initialBubbles || _stressManager.CurrentStress < curStress, cancellationToken: token);
 
         OnHintHide?.Invoke();
         OnTaskCompleted?.Invoke();

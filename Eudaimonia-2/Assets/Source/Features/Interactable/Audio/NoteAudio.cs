@@ -1,4 +1,4 @@
-using Features.Interactable.Environment;
+using Features.Interactable.Environment.Note;
 using Features.UI;
 using UnityEngine;
 using Zenject;

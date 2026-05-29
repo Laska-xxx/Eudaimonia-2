@@ -70,7 +70,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Features.Environment.Interactables.NoteItem
   hintText: "\u0427\u0438\u0442\u0430\u0442\u044C"
-  _noteData: {fileID: 11400000, guid: 2b19ac51740e0a447aea3f5db40cfaf5, type: 2}
+  noteData: {fileID: 11400000, guid: 2b19ac51740e0a447aea3f5db40cfaf5, type: 2}
 --- !u!114 &4733512110961299071
 MonoBehaviour:
   m_ObjectHideFlags: 0

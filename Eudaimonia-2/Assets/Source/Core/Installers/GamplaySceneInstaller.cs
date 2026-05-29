@@ -7,6 +7,7 @@ using Features.Player.Data;
 using Features.Player.Move;
 using Features.Player.Stress;
 using Features.Player.Interact;
+using Features.Interactable.Environment.Note;
 
 namespace Core.Installers
 {
@@ -46,6 +47,7 @@ namespace Core.Installers
             Container.BindInterfacesAndSelfTo<StressManager>().AsSingle();
             Container.Bind<PlayerInventory>().AsSingle();
             Container.Bind<CursorManager>().AsSingle();
+            Container.Bind<NoteManager>().AsSingle();
         }
 
         private void InstallMonoClasses()

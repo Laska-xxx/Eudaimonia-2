@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9356824290d5a8f40b493dc04ee2f07b, type: 3}
   m_Name: StressSettingsData
   m_EditorClassIdentifier: Assembly-CSharp::StressSettingsSO
-  maxStress: 100
-  passiveReduce: 1
+  <MaxStress>k__BackingField: 100
+  <PassiveReduce>k__BackingField: 0.5

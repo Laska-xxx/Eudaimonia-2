@@ -1,5 +1,5 @@
 using Core;
-using Features.Interactable.Environment;
+using Features.Interactable.Environment.Note;
 using Features.UI.DoTween;
 using System;
 using TMPro;
@@ -16,18 +16,22 @@ namespace Features.UI
 
         [SerializeField] private UIPanel notePanel;
         [SerializeField] private Image noteImage;
+        [SerializeField] private TextMeshProUGUI countNotesText;
 
         public event Action OnNoteClosed;
 
         private InputManager _inputManager;
         private ActionMapType _curActionType;
+        private NoteManager _noteManager;
 
         [Inject]
-        private void Init(InputManager inputManager)
+        private void Init(InputManager inputManager, NoteManager noteManager)
         {
             _inputManager = inputManager;
+            _noteManager = noteManager;
 
             _inputManager.GameInput.Note.CloseNote.performed += CloseNote;
+            _noteManager.OnNoteCollected += UpdateNoteCount;
         }
 
         private void Awake()
@@ -41,6 +45,8 @@ namespace Features.UI
             {
                 _inputManager.GameInput.Note.CloseNote.performed -= CloseNote;
             }
+
+            _noteManager.OnNoteCollected -= UpdateNoteCount;
         }
 
         public void OpenNote(NoteDataSO noteData)
@@ -63,6 +69,11 @@ namespace Features.UI
             _inputManager.SwitchActionMapType(_curActionType);
 
             print(_inputManager.CurrentActionMapType);
+        }
+
+        private void UpdateNoteCount(int count)
+        {
+            countNotesText.text = count.ToString();
         }
     }
 }
